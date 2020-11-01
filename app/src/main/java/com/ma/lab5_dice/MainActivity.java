@@ -2,9 +2,14 @@ package com.ma.lab5_dice;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import java.util.Random;
 
@@ -17,13 +22,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.imageDice = findViewById(R.id.imageDice);
+        this.sw = findViewById(R.id.imageSwitcher);
+        this.sw.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView myView = new ImageView(getApplicationContext());
+                myView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                myView.setLayoutParams(new
+                        ImageSwitcher.LayoutParams(
+                                ActionBar.LayoutParams.WRAP_CONTENT,
+                                ActionBar.LayoutParams.WRAP_CONTENT));
+                return myView;
+            }
+        });
+
+        Animation in =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoomin);
+        Animation out =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoomout);
+        this.sw.setInAnimation(in);
+        this.sw.setOutAnimation(out);
     }
 
     public void roll(View view){
         int dice = new Random().nextInt(dice_ids.length);
-        this.imageDice.setImageResource(dice_ids[dice]);
+        this.sw.setImageResource(dice_ids[dice]);
     }
 
-    private ImageView imageDice;
+    private ImageSwitcher sw;
 }
