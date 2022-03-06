@@ -1,7 +1,9 @@
 package com.ma.lab5_dice;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +24,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void roll(View view){
         int dice = new Random().nextInt(dice_ids.length);
-        this.imageDice.setImageResource(dice_ids[dice]);
+        // get animation from rolling.xml
+        AnimationDrawable animation = (AnimationDrawable)
+                AppCompatResources.getDrawable(view.getContext(), R.drawable.rolling);
+        if (animation != null) {
+            // add the dice rolling result as the last frame
+            animation.addFrame(AppCompatResources.getDrawable(
+                    view.getContext(), dice_ids[dice]),10);
+            this.imageDice.setImageDrawable(animation);
+            // play the animation once
+            animation.start();
+        }
     }
 
     private ImageView imageDice;
